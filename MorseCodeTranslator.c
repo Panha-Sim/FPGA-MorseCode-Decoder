@@ -59,6 +59,12 @@ int main(void){
         // State Change 
         if(buttonValue!= prev_key_value) {
 
+
+            if(buttonValue == 4) {
+                printf("%s\n","Exiting Program...");
+                return 0;
+            }
+
             //delayMilliseconds(DEBOUNCE_TIME);
             if(buttonValue == 2) {
                 result = lookup(codeArray);
