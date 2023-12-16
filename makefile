@@ -1,24 +1,24 @@
-TARGET = Morse
+#
+TARGET = MorseWithLCD
 ALT_DEVICE_FAMILY ?= soc_cv_av
 SOCEDS_ROOT ?= $(SOCEDS_DEST_ROOT)
 HWLIBS_ROOT = $(SOCEDS_ROOT)/ip/altera/hps/altera_hps/hwlib
 CROSS_COMPILE = arm-linux-gnueabihf-
-CFLAGS = -g -Wall -std=c99 
-LDFLAGS =  -g -Wall 
+CFLAGS = -static -g -Wall -std=gnu99   -D$(ALT_DEVICE_FAMILY) -I$(HWLIBS_ROOT)/include/$(ALT_DEVICE_FAMILY)   -I$(HWLIBS_ROOT)/include/  -w
+LDFLAGS =  -g -Wall  
 CC = $(CROSS_COMPILE)gcc
-ARCH = arm
+ARCH= arm
 
-SRCS = MorseCodeTranslator.c Hardware.c MorseCodeLookupTable.c
-OBJS = $(SRCS:.c=.o)
 
 build: $(TARGET)
 
-$(TARGET): Hardware.o MorseCodeTranslator.o MorseCodeLookupTable.o
-	$(CC) $(LDFLAGS) $^ -o $@
 
+$(TARGET): main.o terasic_lib.o Hardware.o MorseCodeLookupTable.o  \
+LCD_Lib.o LCD_Driver.o LCD_Hw.o lcd_graphic.o font.o
+	$(CC) $(LDFLAGS)   $^ -o $@   -lrt -lm
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) *.a *.o *~
+	rm -f $(TARGET) *.a *.o *~ *.bmp

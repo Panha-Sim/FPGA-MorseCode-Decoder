@@ -7,10 +7,13 @@ extern volatile int *SWITCH_ptr;
 extern volatile int *HEX_ptr1; 
 
 
+
 int open_physical(int fd);
 void close_physical(int fd);
 void *map_physical(int fd, unsigned int base, unsigned int span);
 void init(int fd);
+void *getLW_Virtual();
+void *getVirtual_base();
 void *readLEDR();
 void *readSwitch();
 void *readHEX1();

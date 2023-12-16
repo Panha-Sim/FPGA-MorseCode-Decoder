@@ -5,6 +5,9 @@
 #include <pthread.h>
 #include "./address_map_arm.h"
 
+#define HW_REGS_BASE ( ALT_STM_OFST )
+#define HW_REGS_SPAN ( 0x04000000 )
+#define HW_REGS_MASK ( HW_REGS_SPAN - 1 )
 
 // Global variables: Pointers to Light Emitting Diodes (LEDs), Switches, and 7 segment displays.
 // These are volatile to indicate their values can change at any time due to external hardware changes.
@@ -12,6 +15,8 @@ volatile int *LEDR_ptr;
 volatile int *SWITCH_ptr;
 volatile int *HEX_ptr1; 
 void *LW_virtual;
+void *virtual_base;
+
 
 int open_physical(int fd);
 void close_physical(int fd);
@@ -23,6 +28,15 @@ void init(int fd){
 		return;
 	if ((LW_virtual = map_physical (fd, LW_BRIDGE_BASE, LW_BRIDGE_SPAN)) == NULL)
 		return;
+	if((virtual_base = map_physical (fd, HW_REGS_SPAN, HW_REGS_SPAN)) == NULL)
+		return;
+}
+
+void *getLW_Virtual(){
+	return LW_virtual;
+}
+void *getVirtual_base(){
+	return virtual_base;
 }
 
 // Functions for obtaining virtual addresses for LED, switch, and HEX display components by adding base addresses to LW_virtual.
